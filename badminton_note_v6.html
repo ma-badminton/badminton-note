@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>バドミントン練習ノート</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<!-- PWAアイコン -->
+<script>
+(function(){
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0d1f45"/><stop offset="100%" stop-color="#1b68c2"/></linearGradient></defs><rect width="512" height="512" rx="110" fill="url(#bg)"/><ellipse cx="256" cy="370" rx="68" ry="52" fill="#ffffff"/><ellipse cx="256" cy="358" rx="56" ry="42" fill="#e8f0fa"/><ellipse cx="256" cy="350" rx="36" ry="28" fill="#ffffff"/><ellipse cx="244" cy="342" rx="14" ry="10" fill="#ffffff" opacity="0.8"/><g stroke="#ffffff" stroke-width="5" stroke-linecap="round" opacity="0.95"><line x1="256" y1="325" x2="190" y2="115"/><line x1="256" y1="325" x2="210" y2="108"/><line x1="256" y1="325" x2="232" y2="104"/><line x1="256" y1="325" x2="256" y2="103"/><line x1="256" y1="325" x2="280" y2="104"/><line x1="256" y1="325" x2="302" y2="108"/><line x1="256" y1="325" x2="322" y2="115"/></g><path d="M 188 118 C 200 92 228 82 256 82 C 284 82 312 92 324 118" fill="none" stroke="#00c4ff" stroke-width="6" stroke-linecap="round"/><path d="M 200 190 C 218 172 238 165 256 165 C 274 165 294 172 312 190" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" opacity="0.7"/><path d="M 210 255 C 226 242 242 237 256 237 C 270 237 286 242 302 255" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" opacity="0.5"/><path d="M 190 118 C 200 92 228 82 256 82 C 284 82 312 92 322 118 L 302 255 C 286 242 270 237 256 237 C 242 237 226 242 210 255 Z" fill="#ffffff" opacity="0.08"/></svg>`;
+  const img=new Image();const blob=new Blob([svg],{type:'image/svg+xml'});const url=URL.createObjectURL(blob);
+  img.onload=function(){const canvas=document.createElement('canvas');canvas.width=512;canvas.height=512;const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0);const png=canvas.toDataURL('image/png');URL.revokeObjectURL(url);let link=document.querySelector("link[rel='apple-touch-icon']");if(!link){link=document.createElement('link');link.rel='apple-touch-icon';document.head.appendChild(link);}link.href=png;let fav=document.querySelector("link[rel='icon']");if(!fav){fav=document.createElement('link');fav.rel='icon';document.head.appendChild(fav);}fav.href=png;};img.src=url;
+})();
+</script>
+<link rel="apple-touch-icon" href="">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="バドミントン">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<style>
+:root{
+  --bg:#f0f4f8;--surface:#ffffff;--surface2:#e8eef5;--border:#c5d5e8;
+  --accent:#1b68c2;--accent2:#0a8fc4;--text:#0f2744;--text-muted:#5a7a9a;
+  --text-dim:#3a5a7a;--good:#0a9960;--bad:#d42a4a;--warn:#d97706;
+  --singles:#1b68c2;--doubles:#7c3aed;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;
+  min-height:100vh;overflow-x:hidden;
+  background-image:radial-gradient(ellipse 60% 40% at 15% 5%,rgba(27,104,194,0.07) 0%,transparent 60%),
+  radial-gradient(ellipse 50% 35% at 85% 95%,rgba(10,143,196,0.05) 0%,transparent 55%);}
+
+/* ===== MODE SELECT ===== */
+.mode-screen{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:100vh;padding:32px 20px;gap:24px;
+}
+.mode-logo{
+  font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:8px;
+  color:var(--text);display:flex;align-items:center;gap:10px;
+}
+.mode-logo-pipe{width:3px;height:32px;background:linear-gradient(180deg,var(--accent),var(--accent2));border-radius:2px;}
+.mode-sub{font-size:11px;letter-spacing:4px;color:var(--text-muted);margin-top:-16px;}
+.mode-label{font-size:11px;letter-spacing:3px;color:var(--text-muted);margin-top:8px;}
+.mode-cards{display:flex;flex-direction:column;gap:14px;width:100%;max-width:340px;}
+.mode-card{
+  background:var(--surface);border:2px solid var(--border);border-radius:16px;
+  padding:22px 24px;cursor:pointer;transition:all 0.25s;display:flex;align-items:center;gap:16px;
+  box-shadow:0 2px 12px rgba(27,104,194,0.08);
+}
+.mode-card:active{transform:scale(0.97);}
+.mode-card.singles:hover,.mode-card.singles:active{border-color:var(--singles);background:rgba(27,104,194,0.05);}
+.mode-card.doubles:hover,.mode-card.doubles:active{border-color:var(--doubles);background:rgba(124,58,237,0.05);}
+.mode-card.both:hover,.mode-card.both:active{border-color:var(--good);background:rgba(10,153,96,0.05);}
+.mode-icon{font-size:36px;flex-shrink:0;}
+.mode-card-text{}
+.mode-card-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.mode-card-desc{font-size:11px;color:var(--text-muted);line-height:1.5;}
+
+/* ===== TABS ===== */
+.tab-bar{display:flex;gap:0;border-bottom:2px solid var(--border);background:var(--surface);
+  position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(27,104,194,0.08);}
+.tab-btn{padding:13px 20px;background:none;border:none;color:var(--text-muted);
+  font-family:'Noto Sans JP',sans-serif;font-size:12px;letter-spacing:2px;cursor:pointer;
+  transition:all 0.2s;border-bottom:3px solid transparent;margin-bottom:-2px;font-weight:500;}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);background:rgba(27,104,194,0.04);}
+.tab-content{display:none;padding:20px 16px 48px;}
+.tab-content.active{display:block;}
+
+/* ===== MODE BADGE ===== */
+.mode-badge{
+  display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;
+  font-size:10px;font-weight:700;letter-spacing:2px;margin-bottom:16px;
+}
+.mode-badge.singles{background:rgba(27,104,194,0.12);color:var(--singles);border:1px solid rgba(27,104,194,0.3);}
+.mode-badge.doubles{background:rgba(124,58,237,0.12);color:var(--doubles);border:1px solid rgba(124,58,237,0.3);}
+.mode-badge.both{background:rgba(10,153,96,0.12);color:var(--good);border:1px solid rgba(10,153,96,0.3);}
+.change-mode-btn{
+  background:none;border:1px solid var(--border);border-radius:20px;
+  padding:4px 12px;font-size:10px;color:var(--text-muted);cursor:pointer;
+  font-family:'Noto Sans JP',sans-serif;transition:all 0.2s;margin-left:8px;
+}
+.change-mode-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+/* ===== HEADER ===== */
+.header{display:flex;align-items:flex-end;gap:14px;margin-bottom:20px;padding-bottom:14px;
+  border-bottom:1px solid var(--border);position:relative;}
+.header::after{content:'';position:absolute;bottom:-1px;left:0;width:80px;height:2px;
+  background:linear-gradient(90deg,var(--accent2),transparent);}
+.sidebar-mark{writing-mode:vertical-rl;font-family:'Bebas Neue',sans-serif;font-size:10px;
+  letter-spacing:5px;color:var(--accent);opacity:0.4;margin-bottom:4px;}
+.title-block{flex:1;}
+.title-en{font-family:'Bebas Neue',sans-serif;font-size:clamp(26px,5vw,38px);letter-spacing:6px;
+  line-height:1;color:var(--text);display:flex;align-items:center;gap:10px;}
+.title-pipe{display:inline-block;width:3px;height:30px;
+  background:linear-gradient(180deg,var(--accent),var(--accent2));border-radius:2px;}
+.title-jp{font-size:10px;letter-spacing:4px;color:var(--text-muted);margin-top:5px;}
+
+/* ===== META ===== */
+.meta-row{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:stretch;}
+.meta-pill{background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:10px 16px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 4px rgba(27,104,194,0.06);}
+.meta-key{font-size:9px;letter-spacing:3px;color:var(--text-muted);text-transform:uppercase;flex-shrink:0;}
+.meta-input{background:none;border:none;color:var(--text);font-family:'Noto Sans JP',sans-serif;
+  font-size:14px;font-weight:500;outline:none;}
+.meta-input::-webkit-calendar-picker-indicator{filter:none;cursor:pointer;}
+.countdown-pill{background:linear-gradient(120deg,rgba(27,104,194,0.08),rgba(10,143,196,0.05));
+  border:1px solid rgba(27,104,194,0.4);border-radius:10px;padding:10px 16px;
+  display:flex;align-items:center;gap:8px;flex:1;flex-wrap:wrap;box-shadow:0 1px 4px rgba(27,104,194,0.06);}
+.match-name-input{background:none;border:none;border-bottom:1px solid rgba(27,104,194,0.3);
+  color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:13px;outline:none;flex:1;min-width:80px;padding-bottom:2px;}
+.match-name-input::placeholder{color:var(--text-muted);}
+.cd-num{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--accent);
+  letter-spacing:2px;min-width:40px;text-align:right;line-height:1;}
+.cd-unit{font-size:10px;color:var(--text-muted);}
+
+/* ===== SECTION ===== */
+.sec-label{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:5px;color:var(--accent);
+  opacity:0.6;margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px;}
+@media(max-width:680px){.grid2,.grid3{grid-template-columns:1fr;}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;
+  position:relative;overflow:hidden;transition:border-color 0.25s;box-shadow:0 2px 8px rgba(27,104,194,0.06);}
+.card:focus-within{border-color:var(--accent);}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));opacity:0;transition:opacity 0.25s;}
+.card:focus-within::before{opacity:1;}
+.clabel{font-size:9px;letter-spacing:3px;color:var(--text-muted);text-transform:uppercase;
+  margin-bottom:10px;display:flex;align-items:center;gap:7px;}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--accent2);flex-shrink:0;}
+.dot.g{background:var(--good);}.dot.r{background:var(--bad);}.dot.y{background:var(--warn);}
+.dot.p{background:var(--doubles);}
+textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;
+  color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:13px;line-height:1.75;
+  padding:9px 11px;resize:vertical;outline:none;transition:border-color 0.2s,background 0.2s;}
+textarea:focus{border-color:var(--accent);background:#fff;}
+textarea::placeholder{color:var(--text-muted);}
+
+/* ===== GAME CARDS ===== */
+.game-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+@media(max-width:680px){.game-cards{grid-template-columns:1fr;}}
+.game-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+  padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 1px 4px rgba(27,104,194,0.06);}
+.game-card-head{display:flex;align-items:center;justify-content:space-between;}
+.game-num-badge{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--accent);line-height:1;letter-spacing:1px;}
+.rbtn{padding:4px 12px;border-radius:20px;border:1px solid var(--border);background:var(--surface);
+  color:var(--text-muted);font-size:11px;font-weight:700;cursor:pointer;transition:all 0.2s;
+  font-family:'Noto Sans JP',sans-serif;letter-spacing:1px;}
+.rbtn.win{background:rgba(10,153,96,0.12);color:var(--good);border-color:var(--good);}
+.rbtn.lose{background:rgba(212,42,74,0.12);color:var(--bad);border-color:var(--bad);}
+.opp-input{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);
+  font-family:'Noto Sans JP',sans-serif;font-size:13px;padding:7px 10px;outline:none;width:100%;transition:border-color 0.2s;}
+.opp-input:focus{border-color:var(--accent);}
+.opp-input::placeholder{color:var(--text-muted);}
+.set-row{display:flex;flex-direction:column;gap:6px;}
+.set-item{display:flex;align-items:center;gap:8px;}
+.set-label{font-size:9px;letter-spacing:2px;color:var(--text-muted);width:32px;flex-shrink:0;}
+.score-box{display:flex;align-items:center;gap:6px;flex:1;background:var(--surface);
+  border:1px solid var(--border);border-radius:8px;padding:5px 8px;transition:border-color 0.2s;}
+.score-box:focus-within{border-color:var(--accent);}
+.score-in{background:none;border:none;color:var(--text);font-family:'Bebas Neue',sans-serif;
+  font-size:24px;line-height:1;width:100%;text-align:center;outline:none;min-width:0;}
+.score-in::placeholder{color:var(--text-muted);opacity:0.5;}
+.score-sep{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--text-muted);flex-shrink:0;}
+
+/* ===== DOUBLES SPECIFIC ===== */
+.partner-card{background:linear-gradient(120deg,rgba(124,58,237,0.06),rgba(124,58,237,0.02));
+  border:1px solid rgba(124,58,237,0.3);border-radius:12px;padding:16px;margin-bottom:14px;}
+.partner-card .clabel .dot{background:var(--doubles);}
+.formation-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+.form-btn{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface);
+  color:var(--text-muted);font-size:12px;cursor:pointer;transition:all 0.2s;font-family:'Noto Sans JP',sans-serif;}
+.form-btn.active{background:rgba(124,58,237,0.15);color:var(--doubles);border-color:var(--doubles);}
+.comm-row{display:flex;gap:6px;margin-top:6px;}
+.comm-btn{flex:1;padding:7px;border-radius:8px;border:1px solid var(--border);background:var(--surface);
+  color:var(--text-muted);font-size:11px;cursor:pointer;transition:all 0.2s;font-family:'Noto Sans JP',sans-serif;text-align:center;}
+.comm-btn.active-good{background:rgba(10,153,96,0.15);color:var(--good);border-color:var(--good);}
+.comm-btn.active-mid{background:rgba(217,119,6,0.15);color:var(--warn);border-color:var(--warn);}
+.comm-btn.active-bad{background:rgba(212,42,74,0.15);color:var(--bad);border-color:var(--bad);}
+.partner-input{background:var(--surface);border:1px solid rgba(124,58,237,0.3);border-radius:8px;
+  color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:14px;font-weight:500;
+  padding:8px 12px;outline:none;flex:1;transition:border-color 0.2s;}
+.partner-input:focus{border-color:var(--doubles);}
+.partner-input::placeholder{color:var(--text-muted);}
+
+/* ===== CONDITION ===== */
+.fat-row{display:flex;gap:6px;}
+.fbtn{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);
+  color:var(--text-muted);font-size:11px;cursor:pointer;transition:all 0.2s;font-family:'Noto Sans JP',sans-serif;}
+.fbtn.a1{background:rgba(10,153,96,0.2);color:var(--good);border-color:var(--good);}
+.fbtn.a2{background:rgba(10,153,96,0.12);color:#3db87a;border-color:#3db87a;}
+.fbtn.a3{background:rgba(217,119,6,0.2);color:var(--warn);border-color:var(--warn);}
+.fbtn.a4{background:rgba(212,42,74,0.12);color:#e05a7a;border-color:#e05a7a;}
+.fbtn.a5{background:rgba(212,42,74,0.22);color:var(--bad);border-color:var(--bad);}
+.cond-row{display:flex;align-items:center;gap:7px;margin-bottom:10px;}
+.ck{font-size:10px;color:var(--text-muted);width:68px;flex-shrink:0;}
+.cinput{background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);
+  font-family:'Noto Sans JP',sans-serif;font-size:12px;padding:4px 8px;outline:none;flex:1;transition:border-color 0.2s;}
+.cinput:focus{border-color:var(--accent);background:#fff;}
+
+/* ===== BUTTONS ===== */
+.btn{padding:9px 22px;border-radius:8px;font-family:'Noto Sans JP',sans-serif;font-size:12px;
+  font-weight:500;cursor:pointer;border:none;transition:all 0.2s;letter-spacing:1px;}
+.btn-ghost{background:none;border:1px solid var(--border);color:var(--text-muted);}
+.btn-ghost:hover{border-color:var(--text-dim);color:var(--text);}
+.btn-sm{padding:4px 10px;font-size:11px;}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#0b8ab5);color:white;box-shadow:0 0 18px rgba(27,104,194,0.3);}
+.btn-primary:hover{box-shadow:0 0 28px rgba(27,104,194,0.5);transform:translateY(-1px);}
+.save-bar{display:flex;justify-content:flex-end;gap:10px;margin-top:22px;padding-top:14px;border-top:1px solid var(--border);}
+
+/* ===== AI CARD ===== */
+.ai-card{background:var(--surface);border:1px solid #c4b5fd;border-radius:12px;padding:16px;
+  margin-bottom:14px;box-shadow:0 2px 8px rgba(124,58,237,0.08);}
+
+/* ===== CALENDAR ===== */
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.cal-month{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:4px;color:var(--text);}
+.cal-nav{background:none;border:1px solid var(--border);color:var(--text-muted);border-radius:8px;
+  padding:6px 14px;cursor:pointer;font-size:16px;transition:all 0.2s;}
+.cal-nav:hover{border-color:var(--accent);color:var(--accent);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:20px;}
+.cal-dow{text-align:center;font-size:9px;letter-spacing:2px;color:var(--text-muted);padding:6px 0;text-transform:uppercase;}
+.cal-day{aspect-ratio:1;border-radius:8px;border:1px solid transparent;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;position:relative;font-size:13px;}
+.cal-day:hover{border-color:var(--accent);background:rgba(27,104,194,0.07);}
+.cal-day.empty{cursor:default;pointer-events:none;}
+.cal-day.today{border-color:var(--accent);color:var(--accent);font-weight:700;}
+.cal-day.has-singles{background:rgba(27,104,194,0.1);border-color:rgba(27,104,194,0.4);}
+.cal-day.has-doubles{background:rgba(124,58,237,0.1);border-color:rgba(124,58,237,0.4);}
+.cal-day.has-both{background:linear-gradient(135deg,rgba(27,104,194,0.1),rgba(124,58,237,0.1));border-color:var(--good);}
+.cal-day.has-singles::after,.cal-day.has-doubles::after,.cal-day.has-both::after{
+  content:'';position:absolute;bottom:3px;width:4px;height:4px;border-radius:50%;background:var(--accent);}
+.cal-day.has-doubles::after{background:var(--doubles);}
+.cal-day.has-both::after{background:var(--good);}
+.cal-day.selected{background:rgba(27,104,194,0.2);border-color:var(--accent);font-weight:700;}
+.log-list-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.log-list-title{font-size:11px;letter-spacing:3px;color:var(--text-muted);text-transform:uppercase;}
+.log-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:14px;
+  box-shadow:0 1px 4px rgba(27,104,194,0.06);}
+.log-item:hover{border-color:var(--accent);transform:translateX(3px);}
+.log-item.is-doubles{border-left:3px solid var(--doubles);}
+.log-item.is-singles{border-left:3px solid var(--singles);}
+.log-date-badge{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent);
+  line-height:1;letter-spacing:1px;flex-shrink:0;width:52px;}
+.log-info{flex:1;}
+.log-theme{font-size:13px;color:var(--text);margin-bottom:3px;}
+.log-meta{font-size:10px;color:var(--text-muted);display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.log-win{color:var(--good);}.log-lose{color:var(--bad);}
+.log-mode-badge{font-size:9px;padding:1px 6px;border-radius:10px;font-weight:700;}
+.log-mode-badge.singles{background:rgba(27,104,194,0.12);color:var(--singles);}
+.log-mode-badge.doubles{background:rgba(124,58,237,0.12);color:var(--doubles);}
+.log-empty{text-align:center;color:var(--text-muted);font-size:13px;padding:40px 0;}
+
+/* ===== TOAST ===== */
+.toast{position:fixed;bottom:22px;right:22px;background:var(--surface);border:1px solid var(--good);
+  border-radius:10px;padding:11px 18px;color:var(--good);font-size:12px;letter-spacing:1px;
+  transform:translateY(55px);opacity:0;transition:all 0.3s;z-index:200;}
+.toast.show{transform:translateY(0);opacity:1;}
+</style>
+</head>
+<body>
+
+<!-- ===== MODE SELECT ===== -->
+<div id="modeScreen" class="mode-screen">
+  <div style="text-align:center;">
+    <div class="mode-logo"><span class="mode-logo-pipe"></span>TRAINING LOG</div>
+    <div class="mode-sub">BADMINTON · PERFORMANCE JOURNAL</div>
+  </div>
+  <div style="text-align:center;margin-top:8px;">
+    <div class="mode-label">今日の練習種目を選んでください</div>
+  </div>
+  <div class="mode-cards">
+    <div class="mode-card singles" id="modeS">
+      <div class="mode-icon">🏸</div>
+      <div class="mode-card-text">
+        <div class="mode-card-title">シングルス</div>
+        <div class="mode-card-desc">個人の戦術・フットワーク・配球パターン</div>
+      </div>
+    </div>
+    <div class="mode-card doubles" id="modeD">
+      <div class="mode-icon">🏸🏸</div>
+      <div class="mode-card-text">
+        <div class="mode-card-title">ダブルス</div>
+        <div class="mode-card-desc">ペアの記録・フォーメーション・ローテーション</div>
+      </div>
+    </div>
+    <div class="mode-card both" id="modeB">
+      <div class="mode-icon">✨</div>
+      <div class="mode-card-text">
+        <div class="mode-card-title">両方</div>
+        <div class="mode-card-desc">シングルス・ダブルス両方の記録</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div id="mainApp" style="display:none;">
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="note">📝 ノート入力</button>
+  <button class="tab-btn" data-tab="calendar">📅 カレンダー</button>
+</div>
+
+<!-- ===== NOTE TAB ===== -->
+<div class="tab-content active" id="tab-note">
+
+<div class="header">
+  <div class="sidebar-mark">BADMINTON</div>
+  <div class="title-block">
+    <div class="title-en"><span class="title-pipe"></span>TRAINING LOG</div>
+    <div class="title-jp" id="modeSubtitle">SINGLES · PERFORMANCE JOURNAL</div>
+  </div>
+</div>
+
+<!-- MODE BADGE -->
+<div style="display:flex;align-items:center;margin-bottom:16px;">
+  <div class="mode-badge singles" id="modeBadge">🏸 シングルス</div>
+  <button class="change-mode-btn" id="changeModeBtn">種目を変更</button>
+</div>
+
+<!-- DATE / NEXT MATCH -->
+<div class="meta-row">
+  <div class="meta-pill">
+    <div class="meta-key">DATE</div>
+    <input type="date" class="meta-input" id="dateInput" style="width:145px;">
+  </div>
+  <div class="countdown-pill">
+    <div style="display:flex;flex-direction:column;gap:6px;flex:1;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="meta-key" style="color:var(--accent);flex-shrink:0;">NEXT MATCH</div>
+        <input type="text" class="match-name-input" id="matchName" placeholder="大会名を入力...">
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <input type="date" class="meta-input" id="matchDate" style="font-size:12px;flex:1;border:1px solid var(--border);border-radius:6px;padding:4px 8px;background:var(--surface);color:var(--text);">
+        <div style="display:flex;align-items:baseline;gap:4px;">
+          <div class="cd-num" id="cdNum">—</div>
+          <div class="cd-unit">日前</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ダブルス専用：ペア情報 -->
+<div id="doublesSection" style="display:none;">
+  <div class="sec-label">PARTNER INFO</div>
+  <div class="partner-card" style="margin-bottom:14px;">
+    <div class="clabel"><span class="dot p"></span>ペア情報</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <span style="font-size:11px;color:var(--text-muted);flex-shrink:0;">ペア名前</span>
+      <input type="text" class="partner-input" id="partnerName" placeholder="ペアの名前を入力...">
+    </div>
+    <div class="clabel" style="margin-bottom:8px;"><span class="dot p"></span>フォーメーション</div>
+    <div class="formation-row">
+      <button class="form-btn" data-form="side">サイドバイサイド</button>
+      <button class="form-btn" data-form="top">トップアンドバック</button>
+      <button class="form-btn" data-form="rotate">ローテーション</button>
+    </div>
+    <div class="clabel" style="margin-bottom:8px;margin-top:10px;"><span class="dot p"></span>ペアとのコミュニケーション</div>
+    <div class="comm-row">
+      <button class="comm-btn" data-comm="good">😊 良かった</button>
+      <button class="comm-btn" data-comm="mid">😐 普通</button>
+      <button class="comm-btn" data-comm="bad">😔 うまくいかなかった</button>
+    </div>
+    <div style="margin-top:10px;">
+      <div class="clabel" style="margin-bottom:6px;"><span class="dot p"></span>ローテーション・連携メモ</div>
+      <textarea id="rotationMemo" rows="3" placeholder="ローテーションのタイミング・連携で気づいたこと..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- TODAY'S FOCUS -->
+<div class="sec-label">TODAY'S FOCUS</div>
+<div class="card" style="margin-bottom:14px;">
+  <div class="clabel"><span class="dot"></span>今日のテーマ</div>
+  <textarea id="themeDetail" rows="3" placeholder="今日のテーマ・意識したいこと..."></textarea>
+</div>
+
+<!-- MATCH RECORD -->
+<div class="sec-label">MATCH RECORD</div>
+<div class="card" style="margin-bottom:14px;">
+  <div class="clabel"><span class="dot"></span>今日のゲーム</div>
+  <div class="game-cards" id="gameCards"></div>
+</div>
+
+<!-- REVIEW -->
+<div class="sec-label">REVIEW</div>
+<div class="grid2" style="margin-bottom:14px;">
+  <div class="card">
+    <div class="clabel"><span class="dot g"></span>良かった点</div>
+    <textarea id="goodPoints" rows="5" placeholder="技術面・メンタル面・戦術面..."></textarea>
+  </div>
+  <div class="card">
+    <div class="clabel"><span class="dot r"></span>改善点・課題</div>
+    <textarea id="badPoints" rows="5" placeholder="次回までに直したいこと..."></textarea>
+  </div>
+</div>
+
+<!-- ダブルス専用レビュー -->
+<div id="doublesReview" style="display:none;margin-bottom:14px;">
+  <div class="sec-label">DOUBLES REVIEW</div>
+  <div class="grid2">
+    <div class="card" style="border-color:rgba(124,58,237,0.3);">
+      <div class="clabel"><span class="dot p"></span>ペア全体の良かった点</div>
+      <textarea id="pairGood" rows="4" placeholder="2人で上手くいったこと..."></textarea>
+    </div>
+    <div class="card" style="border-color:rgba(124,58,237,0.3);">
+      <div class="clabel"><span class="dot p"></span>ペア全体の改善点</div>
+      <textarea id="pairBad" rows="4" placeholder="2人で直すべきこと..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- CONDITION -->
+<div class="sec-label">CONDITION & NEXT</div>
+<div class="grid3" style="margin-bottom:14px;">
+  <div class="card">
+    <div class="clabel"><span class="dot y"></span>体調管理</div>
+    <div class="cond-row">
+      <div class="ck">睡眠</div>
+      <input type="number" class="cinput" id="sleep" placeholder="0.0" step="0.5" min="0" max="24" style="width:55px;flex:none;">
+      <span style="font-size:10px;color:var(--text-muted);">時間</span>
+    </div>
+    <div class="cond-row" style="flex-direction:column;align-items:flex-start;gap:6px;">
+      <div class="ck">疲労度</div>
+      <div class="fat-row" id="fatRow">
+        <button class="fbtn" data-v="1">1</button>
+        <button class="fbtn" data-v="2">2</button>
+        <button class="fbtn" data-v="3">3</button>
+        <button class="fbtn" data-v="4">4</button>
+        <button class="fbtn" data-v="5">5</button>
+      </div>
+    </div>
+    <div class="cond-row">
+      <div class="ck">体の状態</div>
+      <input type="text" class="cinput" id="bodyState" placeholder="痛み・違和感など">
+    </div>
+    <div class="cond-row">
+      <div class="ck">気分</div>
+      <input type="text" class="cinput" id="mood" placeholder="メンタルの状態">
+    </div>
+  </div>
+  <div class="card">
+    <div class="clabel"><span class="dot"></span>振り返り・次回の課題</div>
+    <textarea id="reflection" rows="8" placeholder="次の練習・試合でどう活かすか...&#10;&#10;1. &#10;2. &#10;3. "></textarea>
+  </div>
+  <div class="card">
+    <div class="clabel"><span class="dot y"></span>コーチからのアドバイス</div>
+    <textarea id="coachAdvice" rows="8" placeholder="指摘されたこと・アドバイス..."></textarea>
+  </div>
+</div>
+
+<!-- COURT DIAGRAM -->
+<div class="sec-label">COURT DIAGRAM</div>
+<div class="card" style="margin-bottom:14px;">
+  <div class="clabel"><span class="dot"></span>コート図・配球メモ（タップ＆ドラッグで描く）</div>
+  <div style="display:flex;flex-direction:column;gap:12px;">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+      <canvas id="courtC" width="220" height="440" style="border:1px solid var(--border);border-radius:8px;cursor:crosshair;background:#e8f0fa;display:block;max-width:100%;"></canvas>
+      <div class="tool-row" style="justify-content:center;display:flex;gap:7px;flex-wrap:wrap;">
+        <button class="btn btn-ghost btn-sm" id="toolSmash">🔴 スマッシュ</button>
+        <button class="btn btn-ghost btn-sm" id="toolMove">🟢 動き</button>
+        <button class="btn btn-ghost btn-sm" id="toolPoint">🔵 立ち位置</button>
+        <button class="btn btn-ghost btn-sm" id="toolClear">🗑 クリア</button>
+      </div>
+    </div>
+    <div>
+      <div class="clabel" style="margin-bottom:8px;"><span class="dot"></span>戦術メモ・気づき</div>
+      <textarea id="courtMemo" rows="5" placeholder="気づいたこと・作戦メモ..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- AI ADVICE -->
+<div class="ai-card" id="aiCard">
+  <div class="clabel"><span class="dot p"></span>AI アドバイス <span style="font-size:9px;color:var(--text-muted);letter-spacing:1px;">· バドミントン専門家視点</span></div>
+  <div id="aiResult" style="display:none;background:var(--surface2);border:1px solid #c4b5fd;border-radius:8px;padding:12px 14px;font-size:13px;line-height:1.85;color:var(--text);margin-bottom:12px;white-space:pre-wrap;"></div>
+  <button class="btn" id="aiBtn" style="width:100%;background:linear-gradient(135deg,#7c3aed,#a855f7);color:white;font-size:13px;letter-spacing:1px;box-shadow:0 0 16px rgba(168,85,247,0.2);">
+    🏸 この記録からAIアドバイスをもらう
+  </button>
+</div>
+
+<div class="save-bar">
+  <button class="btn btn-ghost" id="clearBtn">クリア</button>
+  <button class="btn btn-primary" id="saveBtn">💾 この日を保存</button>
+</div>
+
+</div><!-- end tab-note -->
+
+<!-- ===== CALENDAR TAB ===== -->
+<div class="tab-content" id="tab-calendar">
+  <div style="padding-top:8px;">
+    <div class="cal-header">
+      <button class="cal-nav" id="calPrevBtn">‹</button>
+      <div class="cal-month" id="calMonth"></div>
+      <button class="cal-nav" id="calNextBtn">›</button>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="log-list-header">
+      <div class="log-list-title" id="logListTitle">全ての記録</div>
+    </div>
+    <div id="logList"></div>
+  </div>
+</div>
+
+</div><!-- end mainApp -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== IndexedDB =====
+const DB_NAME='BadmintonNote',DB_VER=2,STORE='logs';
+let db;
+function openDB(){
+  return new Promise((res,rej)=>{
+    const req=indexedDB.open(DB_NAME,DB_VER);
+    req.onupgradeneeded=e=>{
+      const d=e.target.result;
+      if(!d.objectStoreNames.contains(STORE)) d.createObjectStore(STORE,{keyPath:'date'});
+    };
+    req.onsuccess=e=>{db=e.target.result;res(db);};
+    req.onerror=rej;
+  });
+}
+function dbPut(data){return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(data).onsuccess=()=>res();tx.onerror=rej;});}
+function dbGet(date){return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readonly');const req=tx.objectStore(STORE).get(date);req.onsuccess=()=>res(req.result);req.onerror=rej;});}
+function dbGetAll(){return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readonly');const req=tx.objectStore(STORE).getAll();req.onsuccess=()=>res(req.result);req.onerror=rej;});}
+function dbDelete(date){return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).delete(date).onsuccess=()=>res();tx.onerror=rej;});}
+
+// ===== MODE =====
+let currentMode = 'singles'; // singles / doubles / both
+
+function setMode(mode){
+  currentMode = mode;
+  document.getElementById('modeScreen').style.display='none';
+  document.getElementById('mainApp').style.display='block';
+
+  const badge = document.getElementById('modeBadge');
+  const subtitle = document.getElementById('modeSubtitle');
+  const ds = document.getElementById('doublesSection');
+  const dr = document.getElementById('doublesReview');
+
+  if(mode==='singles'){
+    badge.className='mode-badge singles'; badge.textContent='🏸 シングルス';
+    subtitle.textContent='SINGLES · PERFORMANCE JOURNAL';
+    ds.style.display='none'; dr.style.display='none';
+  } else if(mode==='doubles'){
+    badge.className='mode-badge doubles'; badge.textContent='🏸🏸 ダブルス';
+    subtitle.textContent='DOUBLES · PERFORMANCE JOURNAL';
+    ds.style.display='block'; dr.style.display='block';
+  } else {
+    badge.className='mode-badge both'; badge.textContent='✨ シングルス＋ダブルス';
+    subtitle.textContent='SINGLES & DOUBLES · PERFORMANCE JOURNAL';
+    ds.style.display='block'; dr.style.display='block';
+  }
+}
+
+document.getElementById('modeS').addEventListener('click',()=>setMode('singles'));
+document.getElementById('modeD').addEventListener('click',()=>setMode('doubles'));
+document.getElementById('modeB').addEventListener('click',()=>setMode('both'));
+document.getElementById('changeModeBtn').addEventListener('click',()=>{
+  document.getElementById('modeScreen').style.display='flex';
+  document.getElementById('mainApp').style.display='none';
+});
+
+// ===== TAB =====
+function switchTab(name){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(name==='calendar'){renderCalendar();renderLogList();}
+}
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>switchTab(btn.dataset.tab));
+});
+
+// ===== INIT =====
+document.getElementById('dateInput').value=new Date().toISOString().split('T')[0];
+
+// GAME CARDS
+const gameCards=document.getElementById('gameCards');
+const rState={};
+const setLabels=['1st','2nd','3rd'];
+for(let i=1;i<=6;i++){
+  const card=document.createElement('div');card.className='game-card';
+  card.innerHTML=`
+    <div class="game-card-head">
+      <div class="game-num-badge">GAME ${i}</div>
+      <button class="rbtn" id="rb${i}">結果</button>
+    </div>
+    <input class="opp-input" type="text" id="op${i}" placeholder="vs 対戦相手">
+    <div class="set-row">
+      ${setLabels.map((lbl,si)=>`
+        <div class="set-item">
+          <div class="set-label">${lbl}</div>
+          <div class="score-box">
+            <input class="score-in" type="number" id="s${i}g${si}a" placeholder="0" min="0" max="30">
+            <div class="score-sep">—</div>
+            <input class="score-in" type="number" id="s${i}g${si}b" placeholder="0" min="0" max="30">
+          </div>
+        </div>`).join('')}
+    </div>`;
+  gameCards.appendChild(card);
+  document.getElementById(`rb${i}`).addEventListener('click',()=>toggleR(i));
+}
+function toggleR(i){
+  const b=document.getElementById(`rb${i}`);
+  if(!rState[i]||rState[i]==='none'){rState[i]='win';b.textContent='WIN';b.className='rbtn win';}
+  else if(rState[i]==='win'){rState[i]='lose';b.textContent='LOSE';b.className='rbtn lose';}
+  else{rState[i]='none';b.textContent='結果';b.className='rbtn';}
+}
+
+// COUNTDOWN
+document.getElementById('matchDate').addEventListener('change',()=>{
+  const d=document.getElementById('matchDate').value;
+  if(!d){document.getElementById('cdNum').textContent='—';return;}
+  const diff=Math.ceil((new Date(d)-new Date())/86400000);
+  document.getElementById('cdNum').textContent=diff>0?diff:0;
+});
+
+// FATIGUE
+let fat=0;
+function setFat(v){fat=v;document.querySelectorAll('.fbtn').forEach(b=>{const bv=parseInt(b.dataset.v);b.className='fbtn'+(bv<=v?` a${v}`:'');});}
+document.querySelectorAll('.fbtn').forEach(btn=>{btn.addEventListener('click',()=>setFat(parseInt(btn.dataset.v)));});
+
+// FORMATION
+let formation='';
+document.querySelectorAll('.form-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.form-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active'); formation=btn.dataset.form;
+  });
+});
+
+// COMMUNICATION
+let commVal='';
+document.querySelectorAll('.comm-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.comm-btn').forEach(b=>{b.className='comm-btn';});
+    const v=btn.dataset.comm;
+    btn.classList.add(v==='good'?'active-good':v==='mid'?'active-mid':'active-bad');
+    commVal=v;
+  });
+});
+
+// ===== COURT =====
+const cv=document.getElementById('courtC');const ctx=cv.getContext('2d');
+let cTool='smash',cDraw=false,cLx,cLy;
+function drawCourt(){
+  const W=220,H=440;ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle='rgba(27,104,194,0.12)';ctx.lineWidth=0.5;
+  for(let x=0;x<W;x+=20){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=20){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  const scale=30,dW=6.1*scale,cLen=13.4*scale;
+  const ox=(W-dW)/2,oy=(H-cLen)/2,bx=ox+dW,mid=ox+dW/2;
+  const net=oy+cLen/2,ssl_t=net-1.98*scale,ssl_b=net+1.98*scale;
+  const lsl_t=oy+0.76*scale,lsl_b=oy+cLen-0.76*scale;
+  const sOff=(6.1-5.18)/2*scale,sl=ox+sOff,sr=bx-sOff;
+  ctx.strokeStyle='rgba(100,148,200,0.6)';ctx.lineWidth=1.5;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ox,oy+cLen);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(bx,oy);ctx.lineTo(bx,oy+cLen);ctx.stroke();
+  ctx.strokeStyle='rgba(10,20,60,0.85)';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(bx,oy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ox,oy+cLen);ctx.lineTo(bx,oy+cLen);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(sl,oy);ctx.lineTo(sl,oy+cLen);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(sr,oy);ctx.lineTo(sr,oy+cLen);ctx.stroke();
+  ctx.strokeStyle='rgba(27,104,194,0.7)';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(sl,lsl_t);ctx.lineTo(sr,lsl_t);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(sl,lsl_b);ctx.lineTo(sr,lsl_b);ctx.stroke();
+  ctx.strokeStyle='rgba(10,20,80,0.8)';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(sl,ssl_t);ctx.lineTo(sr,ssl_t);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(sl,ssl_b);ctx.lineTo(sr,ssl_b);ctx.stroke();
+  ctx.strokeStyle='rgba(27,104,194,0.7)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(mid,oy);ctx.lineTo(mid,ssl_t);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(mid,ssl_b);ctx.lineTo(mid,oy+cLen);ctx.stroke();
+  ctx.strokeStyle='rgba(10,100,180,0.95)';ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(ox-10,net);ctx.lineTo(bx+10,net);ctx.stroke();
+  ctx.strokeStyle='rgba(10,100,180,0.6)';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(ox-10,net-6);ctx.lineTo(ox-10,net+6);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(bx+10,net-6);ctx.lineTo(bx+10,net+6);ctx.stroke();
+  ctx.textAlign='center';
+  ctx.fillStyle='rgba(10,100,180,0.7)';ctx.font='bold 10px "Bebas Neue",sans-serif';ctx.fillText('NET',mid,net-7);
+  ctx.fillStyle='rgba(80,120,160,0.6)';ctx.font='9px "Noto Sans JP",sans-serif';
+  ctx.fillText('OPPONENT',mid,oy+16);ctx.fillText('YOUR SIDE',mid,oy+cLen-7);
+}
+drawCourt();
+function setTool(t){cTool=t;}
+function clearCourt(){drawCourt();}
+cv.addEventListener('mousedown',e=>{cDraw=true;const r=cv.getBoundingClientRect();const sX=cv.width/r.width,sY=cv.height/r.height;cLx=(e.clientX-r.left)*sX;cLy=(e.clientY-r.top)*sY;if(cTool==='point'){ctx.fillStyle='rgba(27,104,194,0.9)';ctx.beginPath();ctx.arc(cLx,cLy,5,0,Math.PI*2);ctx.fill();}});
+cv.addEventListener('mousemove',e=>{if(!cDraw)return;const r=cv.getBoundingClientRect();const sX=cv.width/r.width,sY=cv.height/r.height;const x=(e.clientX-r.left)*sX,y=(e.clientY-r.top)*sY;if(cTool==='smash'){ctx.strokeStyle='#d42a4a';ctx.lineWidth=2;ctx.setLineDash([]);ctx.beginPath();ctx.moveTo(cLx,cLy);ctx.lineTo(x,y);ctx.stroke();}else if(cTool==='move'){ctx.strokeStyle='#0a9960';ctx.lineWidth=1.5;ctx.setLineDash([6,4]);ctx.beginPath();ctx.moveTo(cLx,cLy);ctx.lineTo(x,y);ctx.stroke();ctx.setLineDash([]);}cLx=x;cLy=y;});
+cv.addEventListener('mouseup',()=>{cDraw=false;});cv.addEventListener('mouseleave',()=>{cDraw=false;});
+cv.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0],r=cv.getBoundingClientRect();const sX=cv.width/r.width,sY=cv.height/r.height;cLx=(t.clientX-r.left)*sX;cLy=(t.clientY-r.top)*sY;cDraw=true;if(cTool==='point'){ctx.fillStyle='rgba(27,104,194,0.9)';ctx.beginPath();ctx.arc(cLx,cLy,5,0,Math.PI*2);ctx.fill();}});
+cv.addEventListener('touchmove',e=>{e.preventDefault();if(!cDraw)return;const t=e.touches[0],r=cv.getBoundingClientRect();const sX=cv.width/r.width,sY=cv.height/r.height;const x=(t.clientX-r.left)*sX,y=(t.clientY-r.top)*sY;ctx.strokeStyle=cTool==='smash'?'#d42a4a':'#0a9960';ctx.lineWidth=2;ctx.setLineDash([]);ctx.beginPath();ctx.moveTo(cLx,cLy);ctx.lineTo(x,y);ctx.stroke();cLx=x;cLy=y;});
+cv.addEventListener('touchend',()=>{cDraw=false;});
+
+// ===== COLLECT =====
+function collectData(){
+  return{
+    date:document.getElementById('dateInput').value,
+    mode:currentMode,
+    matchName:document.getElementById('matchName').value,
+    matchDate:document.getElementById('matchDate').value,
+    themeDetail:document.getElementById('themeDetail').value,
+    goodPoints:document.getElementById('goodPoints').value,
+    badPoints:document.getElementById('badPoints').value,
+    sleep:document.getElementById('sleep').value,
+    fat,bodyState:document.getElementById('bodyState').value,
+    mood:document.getElementById('mood').value,
+    reflection:document.getElementById('reflection').value,
+    coachAdvice:document.getElementById('coachAdvice').value,
+    courtMemo:document.getElementById('courtMemo').value,
+    court:cv.toDataURL(),
+    results:{...rState},
+    // doubles
+    partnerName:document.getElementById('partnerName').value,
+    formation,commVal,
+    rotationMemo:document.getElementById('rotationMemo').value,
+    pairGood:document.getElementById('pairGood').value,
+    pairBad:document.getElementById('pairBad').value,
+    // scores
+    ...(()=>{const s={};for(let i=1;i<=6;i++){s[`op${i}`]=document.getElementById(`op${i}`).value;for(let j=0;j<3;j++){s[`s${i}g${j}a`]=document.getElementById(`s${i}g${j}a`).value;s[`s${i}g${j}b`]=document.getElementById(`s${i}g${j}b`).value;}}return s;})()
+  };
+}
+
+// ===== RESTORE =====
+function restoreData(data){
+  if(data.mode) setMode(data.mode);
+  ['dateInput','matchName','matchDate','themeDetail','goodPoints','badPoints',
+   'sleep','bodyState','mood','reflection','coachAdvice','courtMemo',
+   'partnerName','rotationMemo','pairGood','pairBad'].forEach(id=>{
+    const el=document.getElementById(id);if(el&&data[id]!==undefined)el.value=data[id];
+  });
+  if(data.fat)setFat(data.fat);else{fat=0;document.querySelectorAll('.fbtn').forEach(b=>b.className='fbtn');}
+  if(data.results){for(let i=1;i<=6;i++){const v=data.results[i]||'none';rState[i]=v;const rb=document.getElementById(`rb${i}`);if(!rb)return;if(v==='win'){rb.textContent='WIN';rb.className='rbtn win';}else if(v==='lose'){rb.textContent='LOSE';rb.className='rbtn lose';}else{rb.textContent='結果';rb.className='rbtn';}}}
+  if(data.formation){formation=data.formation;document.querySelectorAll('.form-btn').forEach(b=>{if(b.dataset.form===formation)b.classList.add('active');});}
+  if(data.commVal){commVal=data.commVal;document.querySelectorAll('.comm-btn').forEach(b=>{if(b.dataset.comm===commVal)b.classList.add(commVal==='good'?'active-good':commVal==='mid'?'active-mid':'active-bad');});}
+  for(let i=1;i<=6;i++){const op=document.getElementById(`op${i}`);if(op&&data[`op${i}`])op.value=data[`op${i}`];for(let j=0;j<3;j++){const a=document.getElementById(`s${i}g${j}a`),b=document.getElementById(`s${i}g${j}b`);if(a&&data[`s${i}g${j}a`])a.value=data[`s${i}g${j}a`];if(b&&data[`s${i}g${j}b`])b.value=data[`s${i}g${j}b`];}}
+  if(data.court){const img=new Image();img.onload=()=>ctx.drawImage(img,0,0);img.src=data.court;}
+  const md=document.getElementById('matchDate').value;
+  if(md){const diff=Math.ceil((new Date(md)-new Date())/86400000);document.getElementById('cdNum').textContent=diff>0?diff:0;}
+}
+
+// ===== SAVE =====
+async function saveData(){
+  const data=collectData();
+  if(!data.date){showToast('⚠ 日付を入力してください','var(--warn)');return;}
+  await dbPut(data);
+  // .ics生成
+  const theme=data.themeDetail||'練習';
+  const wins=Object.values(rState).filter(v=>v==='win').length;
+  const loses=Object.values(rState).filter(v=>v==='lose').length;
+  const modeLabel=data.mode==='singles'?'シングルス':data.mode==='doubles'?'ダブルス':'シングルス＋ダブルス';
+  const desc=[`種目：${modeLabel}`,`テーマ：${theme}`,wins+loses>0?`結果：${wins}勝${loses}敗`:'',data.fat?`疲労度：${data.fat}/5`:'',data.partnerName?`ペア：${data.partnerName}`:''].filter(Boolean).join('\\n');
+  const icsDate=data.date.replace(/-/g,'');
+  const now=new Date().toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
+  const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//BadmintonNote//JP','CALSCALE:GREGORIAN','METHOD:PUBLISH','BEGIN:VEVENT',`UID:${icsDate}-badminton@note`,`DTSTAMP:${now}`,`DTSTART;VALUE=DATE:${icsDate}`,`DTEND;VALUE=DATE:${icsDate}`,`SUMMARY:🏸 バドミントン練習（${modeLabel}）`,`DESCRIPTION:${desc}`,'END:VEVENT','END:VCALENDAR'].join('\r\n');
+  const icsBlob=new Blob([ics],{type:'text/calendar;charset=utf-8'});
+  const icsUrl=URL.createObjectURL(icsBlob);
+  const icsA=document.createElement('a');icsA.href=icsUrl;icsA.download=icsDate+'.ics';
+  setTimeout(()=>{icsA.click();URL.revokeObjectURL(icsUrl);},300);
+  showToast(`✓ ${data.date} を保存しました`,'var(--good)');
+  setTimeout(()=>switchTab('calendar'),800);
+}
+
+// ===== CLEAR =====
+function clearAll(){
+  ['themeDetail','goodPoints','badPoints','bodyState','mood','reflection','coachAdvice','courtMemo',
+   'partnerName','rotationMemo','pairGood','pairBad'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('sleep').value='';
+  fat=0;document.querySelectorAll('.fbtn').forEach(b=>b.className='fbtn');
+  formation='';commVal='';
+  document.querySelectorAll('.form-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.comm-btn').forEach(b=>b.className='comm-btn');
+  for(let i=1;i<=6;i++){rState[i]='none';const rb=document.getElementById(`rb${i}`);if(rb){rb.textContent='結果';rb.className='rbtn';}const op=document.getElementById(`op${i}`);if(op)op.value='';for(let j=0;j<3;j++){const a=document.getElementById(`s${i}g${j}a`),b=document.getElementById(`s${i}g${j}b`);if(a)a.value='';if(b)b.value='';}}
+  clearCourt();
+}
+
+// ===== TOAST =====
+function showToast(msg,color='var(--good)'){
+  const t=document.getElementById('toast');t.textContent=msg;t.style.borderColor=color;t.style.color=color;
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ===== AI ADVICE =====
+async function getAiAdvice(){
+  const btn=document.getElementById('aiBtn');const result=document.getElementById('aiResult');
+  const date=document.getElementById('dateInput').value||'不明';
+  const theme=document.getElementById('themeDetail').value||'（なし）';
+  const good=document.getElementById('goodPoints').value||'（なし）';
+  const bad=document.getElementById('badPoints').value||'（なし）';
+  const ref=document.getElementById('reflection').value||'（なし）';
+  const coach=document.getElementById('coachAdvice').value||'（なし）';
+  const sleep=document.getElementById('sleep').value||'不明';
+  const body=document.getElementById('bodyState').value||'（なし）';
+  const mood=document.getElementById('mood').value||'（なし）';
+  const wins=Object.values(rState).filter(v=>v==='win').length;
+  const loses=Object.values(rState).filter(v=>v==='lose').length;
+  const partner=document.getElementById('partnerName').value||'';
+  const rotation=document.getElementById('rotationMemo').value||'（なし）';
+  const pairGood=document.getElementById('pairGood').value||'（なし）';
+  const pairBad=document.getElementById('pairBad').value||'（なし）';
+  const modeLabel=currentMode==='singles'?'シングルス':currentMode==='doubles'?'ダブルス':'シングルス＋ダブルス';
+  if(!theme&&!good&&!bad&&!ref){showToast('⚠ 記録を入力してからアドバイスをもらいましょう','var(--warn)');return;}
+  btn.textContent='⏳ 分析中...';btn.disabled=true;result.style.display='none';
+  const doublesInfo=currentMode!=='singles'?`
+【ペア名前】${partner}
+【フォーメーション】${formation||'未記入'}
+【ペアとのコミュニケーション】${commVal||'未記入'}
+【ローテーション・連携メモ】${rotation}
+【ペア全体の良かった点】${pairGood}
+【ペア全体の改善点】${pairBad}`:'';
+  const prompt=`あなたはバドミントンの元プロ選手であり、高校生を指導する経験豊富なコーチです。
+以下は高校生女子プレーヤーの練習・試合記録です。
+
+【日付】${date}
+【種目】${modeLabel}
+【今日のテーマ】${theme}
+【ゲーム結果】${wins}勝 ${loses}敗${doublesInfo}
+【良かった点】${good}
+【改善点・課題】${bad}
+【振り返り】${ref}
+【コーチのアドバイス】${coach}
+【睡眠】${sleep}時間
+【体の状態】${body}
+【気分・メンタル】${mood}
+
+以下の構成でアドバイスをしてください：
+① 今日の記録から見える強みと良い点
+② 最優先で改善すべき課題（1〜2点）
+③ 次の練習で試してほしい具体的なドリル・意識ポイント
+${currentMode!=='singles'?'④ ダブルスのペアワーク・フォーメーションへのアドバイス\n⑤ メンタル・コンディション面へのひとこと':'④ メンタル・コンディション面へのひとこと'}
+
+簡潔に、でも具体的に。高校生に伝わる言葉でお願いします。`;
+  try{
+    const response=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+    const data=await response.json();
+    const text=data.content?.[0]?.text||'アドバイスを取得できませんでした。';
+    result.textContent=text;result.style.display='block';
+    showToast('✓ AIアドバイスを取得しました','#a855f7');
+  }catch(e){result.textContent='エラーが発生しました。ネットワーク接続を確認してください。';result.style.display='block';}
+  btn.textContent='🏸 この記録からAIアドバイスをもらう';btn.disabled=false;
+}
+
+// ===== CALENDAR =====
+let calYear=new Date().getFullYear(),calMonth=new Date().getMonth(),allLogs=[],selectedDate=null;
+
+async function renderCalendar(){
+  allLogs=await dbGetAll();
+  const logMap={};allLogs.forEach(l=>{logMap[l.date]=l.mode||'singles';});
+  const today=new Date().toISOString().split('T')[0];
+  const y=calYear,m=calMonth;
+  const first=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate();
+  const months=['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
+  document.getElementById('calMonth').textContent=`${months[m]} ${y}`;
+  const grid=document.getElementById('calGrid');grid.innerHTML='';
+  ['SUN','MON','TUE','WED','THU','FRI','SAT'].forEach(d=>{const el=document.createElement('div');el.className='cal-dow';el.textContent=d;grid.appendChild(el);});
+  for(let i=0;i<first;i++){const el=document.createElement('div');el.className='cal-day empty';grid.appendChild(el);}
+  for(let d=1;d<=days;d++){
+    const dateStr=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const el=document.createElement('div');
+    let cls='cal-day';
+    if(dateStr===today)cls+=' today';
+    if(logMap[dateStr]){cls+=` has-${logMap[dateStr]==='both'?'both':logMap[dateStr]==='doubles'?'doubles':'singles'}`;}
+    if(dateStr===selectedDate)cls+=' selected';
+    el.className=cls;el.textContent=d;
+    el.addEventListener('click',()=>selectCalDay(dateStr));
+    grid.appendChild(el);
+  }
+}
+function calPrev(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
+function calNext(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalendar();}
+
+async function selectCalDay(dateStr){
+  selectedDate=dateStr;renderCalendar();
+  document.getElementById('logListTitle').textContent=`${dateStr} の記録`;
+  const data=await dbGet(dateStr);
+  const list=document.getElementById('logList');list.innerHTML='';
+  if(!data){
+    const empty=document.createElement('div');empty.className='log-empty';
+    empty.innerHTML='この日の記録はありません<br><br>';
+    const btn=document.createElement('button');btn.className='btn btn-primary';btn.style.fontSize='12px';
+    btn.textContent='この日のノートを作成';
+    btn.addEventListener('click',()=>goToDate(dateStr));
+    empty.appendChild(btn);list.appendChild(empty);return;
+  }
+  renderLogItems([data]);
+}
+
+async function renderLogList(){
+  allLogs=await dbGetAll();allLogs.sort((a,b)=>b.date.localeCompare(a.date));
+  if(!selectedDate)document.getElementById('logListTitle').textContent=`全ての記録 (${allLogs.length}件)`;
+  if(allLogs.length===0){document.getElementById('logList').innerHTML='<div class="log-empty">まだ記録がありません！</div>';return;}
+  renderLogItems(selectedDate?allLogs.filter(l=>l.date===selectedDate):allLogs);
+}
+
+function renderLogItems(logs){
+  const list=document.getElementById('logList');list.innerHTML='';
+  if(logs.length===0){list.innerHTML='<div class="log-empty">記録がありません</div>';return;}
+  logs.forEach(l=>{
+    const wins=Object.values(l.results||{}).filter(v=>v==='win').length;
+    const loses=Object.values(l.results||{}).filter(v=>v==='lose').length;
+    const theme=l.themeDetail||'（テーマなし）';
+    const d=l.date.split('-');
+    const mode=l.mode||'singles';
+    const modeLabel=mode==='doubles'?'ダブルス':mode==='both'?'両方':'シングルス';
+    const item=document.createElement('div');
+    item.className=`log-item is-${mode==='both'?'singles':mode}`;
+    item.innerHTML=`
+      <div class="log-date-badge">${d[1]}/${d[2]}</div>
+      <div class="log-info">
+        <div class="log-theme">${theme.substring(0,40)}</div>
+        <div class="log-meta">
+          <span>${d[0]}年</span>
+          <span class="log-mode-badge ${mode==='both'?'singles':mode}">${modeLabel}</span>
+          ${l.partnerName?`<span>🏸 ${l.partnerName}</span>`:''}
+          ${wins+loses>0?`<span class="log-win">▲${wins}勝</span><span class="log-lose">▼${loses}敗</span>`:''}
+          ${l.fat?`<span>疲労 ${l.fat}/5</span>`:''}
+        </div>
+      </div>
+      <div><button class="btn btn-ghost btn-sm del-btn">🗑</button></div>`;
+    item.addEventListener('click',()=>loadLog(l.date));
+    item.querySelector('.del-btn').addEventListener('click',e=>{e.stopPropagation();deleteLog(l.date);});
+    list.appendChild(item);
+  });
+}
+
+async function loadLog(date){
+  const data=await dbGet(date);if(!data)return;
+  restoreData(data);switchTab('note');
+  showToast(`✓ ${date} を読み込みました`,'var(--accent)');
+}
+function goToDate(date){clearAll();document.getElementById('dateInput').value=date;switchTab('note');}
+async function deleteLog(date){
+  await dbDelete(date);
+  if(selectedDate===date)selectedDate=null;
+  renderCalendar();renderLogList();
+  showToast(`🗑 ${date} を削除しました`,'var(--bad)');
+}
+
+// ===== START =====
+openDB().then(()=>{
+  document.getElementById('saveBtn').addEventListener('click',saveData);
+  document.getElementById('clearBtn').addEventListener('click',clearAll);
+  document.getElementById('aiBtn').addEventListener('click',getAiAdvice);
+  document.getElementById('toolSmash').addEventListener('click',()=>setTool('smash'));
+  document.getElementById('toolMove').addEventListener('click',()=>setTool('move'));
+  document.getElementById('toolPoint').addEventListener('click',()=>setTool('point'));
+  document.getElementById('toolClear').addEventListener('click',clearCourt);
+  document.getElementById('calPrevBtn').addEventListener('click',calPrev);
+  document.getElementById('calNextBtn').addEventListener('click',calNext);
+});
+</script>
+</body>
+</html>
